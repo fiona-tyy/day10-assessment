@@ -13,12 +13,10 @@ public class Main{
 
     public static void main(String[] args) throws IOException {
         
-        
-        String hostname = args[0];
+        String host = args[0];
         int port = Integer.parseInt(args[1]);
 
-        // Socket socket = new Socket(host.getHostAddress(), port);
-        Socket socket = new Socket(hostname, port);
+        Socket socket = new Socket(host, port);
         System.out.println("Client connected");
 
         InputStream is = socket.getInputStream();
@@ -39,9 +37,9 @@ public class Main{
         
         // perform operations for numbers in numberList
 
-        Float mean = calculateMean(numberList);
+        float mean = calculateMean(numberList);
         
-        Float stdDev = calculateStdDev(numberList);
+        float stdDev = calculateStdDev(numberList);
 
         // Write output to server
         String name = "Fiona Teo Yayuan";
@@ -62,22 +60,22 @@ public class Main{
 
     }
 
-    public static Float calculateMean(List<Float> numberList){
-        Float sum = 0f;
+    public static float calculateMean(List<Float> numberList){
+        float sum = 0f;
         int countOfNumbers = numberList.size();
-        for (Float f : numberList){
+        for (float f : numberList){
             sum += f;
         }
 
-        Float mean = sum / countOfNumbers;
+        float mean = sum / countOfNumbers;
         return mean;
     }
 
     public static float calculateStdDev(List<Float> numberList){
 
-        Float mean = calculateMean(numberList);
+        float mean = calculateMean(numberList);
         int countOfNumbers = numberList.size();
-        Float stdDev = 0f;
+        float stdDev = 0f;
         for (Float num : numberList){
             stdDev += (float) (Math.pow(num-mean, 2));
         }
