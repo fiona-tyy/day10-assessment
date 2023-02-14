@@ -36,7 +36,16 @@ public class TextProcessor {
     public void printProbability (Map<String, Map<String,Integer>> wordAndNextWordsCount){
         for(Map.Entry<String, Map <String, Integer>> entry : wordAndNextWordsCount.entrySet()){
             System.out.println(entry.getKey());
-            System.out.println(">>" + entry.getValue());
+            
+            int totalCount = 0;
+            for (Map.Entry<String,Integer> nextWordEntry : entry.getValue().entrySet()){
+                
+                totalCount+=nextWordEntry.getValue();
+            }
+            for (Map.Entry<String,Integer> nextWordEntry : entry.getValue().entrySet()){
+                System.out.printf("\t%s %.2f\n", nextWordEntry.getKey(), (float)nextWordEntry.getValue()/totalCount);
+            }
+
         }
     }
 }
