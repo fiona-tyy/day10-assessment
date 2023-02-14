@@ -1,13 +1,10 @@
 package assessment;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,31 +13,30 @@ public class Main{
 
     public static void main(String[] args) throws IOException {
         
+        
         String hostname = args[0];
-        InetAddress host = InetAddress.getByName(hostname);
-        System.out.println(host.getHostAddress());
         int port = Integer.parseInt(args[1]);
 
-        Socket socket = new Socket(host.getHostAddress(), port);
+        // Socket socket = new Socket(host.getHostAddress(), port);
+        Socket socket = new Socket(hostname, port);
+        System.out.println("Client connected");
 
-        
         InputStream is = socket.getInputStream();
-        BufferedInputStream bis = new BufferedInputStream(is);
-        DataInputStream dis = new DataInputStream(bis);
+        ObjectInputStream ois = new ObjectInputStream(is);
 
         OutputStream os = socket.getOutputStream();
-        BufferedOutputStream bos = new BufferedOutputStream(os);
-        DataOutputStream dos = new DataOutputStream(bos);
+        ObjectOutputStream oos = new ObjectOutputStream(os);
 
         List<Float> numberList = new LinkedList<>();
-        String dataFromServer = "";
-        
-        // read data from server, convert to float and add to numberList
-        while((dataFromServer=dis.readUTF()) != null){
-            Float number = Float.parseFloat(dataFromServer);
-            numberList.add(number);
-        }
 
+        // read data from server, convert to float and add to numberList
+        String dataFromServer = ois.readUTF();
+        System.out.println(dataFromServer);
+        String[] numbers = dataFromServer.split(",");
+        for(String s : numbers){
+            numberList.add(Float.parseFloat(s));
+        }
+        
         // perform operations for numbers in numberList
 
         Float mean = calculateMean(numberList);
@@ -51,17 +47,15 @@ public class Main{
         String name = "Fiona Teo Yayuan";
         String email = "fiona.teoy@gmail.com";
 
-        dos.writeUTF(name);
-        dos.writeUTF(email);
-        dos.writeFloat(mean);
-        dos.writeFloat(stdDev);
-        dos.flush();
+        oos.writeUTF(name);
+        oos.writeUTF(email);
+        oos.writeFloat(mean);
+        oos.writeFloat(stdDev);
+        oos.flush();
         
-        dos.close();
-        bos.close();
+        oos.close();
         os.close();
-        dis.close();
-        bis.close();
+        ois.close();
         is.close();
 
         socket.close();
@@ -84,8 +78,8 @@ public class Main{
         Float mean = calculateMean(numberList);
         int countOfNumbers = numberList.size();
         Float stdDev = 0f;
-        for (Float f : numberList){
-            stdDev += (float) (Math.pow(f-mean, 2));
+        for (Float num : numberList){
+            stdDev += (float) (Math.pow(num-mean, 2));
         }
 
         return (float)Math.sqrt(stdDev/countOfNumbers);
