@@ -1,0 +1,7 @@
+Fox
+Socks
+Box
+Knox
+
+Knox in box.
+Fox in socks.
